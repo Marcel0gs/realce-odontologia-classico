@@ -358,10 +358,17 @@ h3{font-size:1.18rem}
   .hero__selo{display:none}
   .hero h1{max-width:none;font-size:clamp(1.9rem,8.2vw,2.7rem)}
   .hero__sub{font-size:1rem}
-  /* Botao principal na linha inteira: no celular o alvo do dedo e o que
-     decide, e "Agendar pelo WhatsApp" e a unica acao que importa aqui. */
-  .hero__acoes{margin-top:1.5rem;gap:.7rem}
-  .hero__acoes .btn{flex:1 1 100%;justify-content:center}
+  /* ⚠️ LADO A LADO, NAO EMPILHADO — mudou por pedido do usuario depois de ver
+     a versao cheia (cada botao numa linha). Os dois dividem a largura igual
+     (flex:1 1 0) em vez de cada um tomar a linha inteira.
+     O clamp() no font-size e o que segura isso em telas de ~320-360px: sem
+     ele, "Agendar avaliacao" com o icone e mais largo que a metade da tela
+     nesses aparelhos, e como white-space e nowrap (pra nao quebrar a pilula
+     em duas linhas), o texto estouraria a borda em vez de quebrar. */
+  .hero__acoes{margin-top:1.5rem;gap:.5rem;flex-wrap:nowrap}
+  .hero__acoes .btn{flex:1 1 0;justify-content:center;white-space:nowrap}
+  .hero__acoes .btn--peq{padding:.58rem .5rem;font-size:clamp(.72rem,3.6vw,.85rem);gap:.35rem}
+  .hero__acoes .btn--peq .btn__ico{width:14px;height:14px}
 }
 
 .moldura{
@@ -370,14 +377,85 @@ h3{font-size:1.18rem}
 }
 .moldura img{width:100%}
 
-/* ====================== faixa de credenciais ====================== */
+/* ====================== faixa de credenciais ======================
+   NO CELULAR ISSO VIRA LETREIRO — rola sozinho, em loop, sem parar. Pedido do
+   usuario em 19/08/2026, depois de ver os quatro itens empilhados em tres
+   linhas apertadas (print anexado na conversa). No desktop nada mudou: os
+   quatro itens continuam centralizados numa linha so, como sempre foram.
+
+   COMO O LOOP FECHA SEM COSTURA. O truque padrao de letreiro em CSS puro e
+   duplicar o conteudo: dois `.credenciais__trilho` iguais, lado a lado dentro
+   de `.credenciais__pista`. Anima-se a PISTA (o pai), nao os trilhos, e o
+   alvo e -50% — nao -100%. A pista tem a largura dos DOIS trilhos somados;
+   50% da largura dela e exatamente a largura de UM trilho. Deslocar a pista
+   nessa distancia exata faz o trilho B pousar pixel a pixel onde o trilho A
+   comecou — como os dois sao identicos, o olho nao percebe o corte, e a
+   animacao pode repetir do zero (`from{translateX(0)}`) sem nenhum salto.
+   Se um dia entrar um QUINTO item, o unico ajuste necessario e nenhum: os
+   dois trilhos continuam identicos entre si, a conta continua batendo.
+
+   POR QUE HA DOIS <div class="credenciais__trilho"> NO HTML, E NAO UM SO
+   ANIMADO COM CSS. `translateX(-50%)` precisa que o elemento tenha o DOBRO do
+   conteudo visivel — um trilho so, do tamanho normal, andaria -50% de si
+   mesmo e sumiria de cena com metade do texto ainda faltando entrar. A copia
+   e o que da a pista o comprimento certo pra conta fechar.
+
+   ACESSIBILIDADE. O segundo trilho tem `aria-hidden="true"`: e visual, existe
+   so pro loop funcionar, e um leitor de tela nao deve ler os mesmos quatro
+   itens duas vezes. No desktop ele nem aparece (`display:none`) — so o
+   primeiro conta, e do jeito de sempre. */
 .credenciais{background:var(--marrom);color:#EFE7DB;padding:1.5rem 0}
-.credenciais__lista{
+.credenciais__pista{
   display:flex;flex-wrap:wrap;justify-content:center;
   gap:.6rem clamp(1.2rem,4vw,3rem);text-align:center;
 }
+/* No desktop o trilho e transparente pro layout: `display:contents` tira a
+   div do fluxo e deixa os quatro <span> participarem direto do flex-wrap da
+   pista — exatamente a mesma arvore visual de antes do letreiro existir. */
+.credenciais__trilho{display:contents}
+.credenciais__trilho[aria-hidden]{display:none}
 .credenciais__item{font-size:.86rem;letter-spacing:.03em}
 .credenciais__item b{color:var(--dourado-claro);font-weight:600}
+
+@media (max-width:700px){
+  .credenciais{overflow:hidden}
+  .credenciais__pista{
+    flex-wrap:nowrap;justify-content:flex-start;text-align:left;
+    width:max-content;margin-inline:0;gap:0;padding-left:1.25rem;
+    animation:letreiro 26s linear infinite;
+    will-change:transform;
+  }
+  /* Cada trilho vira flex de verdade (nao mais `contents`) — precisa ocupar
+     espaco proprio pra ficar lado a lado com o outro. `flex:none` impede o
+     flexbox de encolher os trilhos pra caber na tela, que e o oposto do que
+     um letreiro precisa: ele TEM que ser mais largo que a viewport. */
+  .credenciais__trilho{
+    display:flex;flex:none;align-items:center;
+    gap:clamp(1.2rem,4vw,3rem);padding-right:clamp(1.2rem,4vw,3rem);
+  }
+  .credenciais__trilho[aria-hidden]{display:flex}
+  .credenciais__item{white-space:nowrap}
+}
+@keyframes letreiro{
+  from{transform:translateX(0)}
+  to{transform:translateX(-50%)}
+}
+/* prefers-reduced-motion desliga o letreiro, mas nao pode so parar o CSS:
+   sem isso os OITO spans (quatro + a copia) ficariam lado a lado, mais largos
+   que a tela, parados — metade do conteudo cortado pra sempre, sem jeito de
+   ler. A saida e reverter pro layout do desktop: os itens voltam a quebrar
+   linha, centralizados, e a copia oculta some (display:none). Movimento
+   desligado, mas nada de conteudo perdido — mesma logica do resto do site. */
+@media (max-width:700px) and (prefers-reduced-motion:reduce){
+  .credenciais__pista{
+    animation:none;flex-wrap:wrap;width:auto;margin-inline:auto;padding-left:0;
+    justify-content:center;text-align:center;
+    gap:.6rem clamp(1.2rem,4vw,3rem);
+  }
+  .credenciais__trilho{display:contents}
+  .credenciais__trilho[aria-hidden]{display:none}
+  .credenciais__item{white-space:normal}
+}
 
 /* ====================== promessas ====================== */
 .promessas{display:grid;gap:1.1rem}
@@ -857,12 +935,24 @@ h3{font-size:1.18rem}
 </section>
 
 <!-- ===== credenciais ===== -->
+<!-- Os quatro itens aparecem duas vezes de proposito — e o que faz o letreiro
+     do celular fechar sem costura. Se um item mudar (novo convenio, por
+     exemplo), muda nos DOIS trilhos, senao o loop passa a repetir informacao
+     desatualizada por meia volta. Ver o comentario grande no CSS. -->
 <section class="credenciais">
-  <div class="env credenciais__lista">
-    <span class="credenciais__item"><b>Ortodontia</b> e clínica geral</span>
-    <span class="credenciais__item">Atendemos <b>PASA</b> e <b>IPSM</b></span>
-    <span class="credenciais__item">Rua Negrão de Lima, 51 · <b>Alvorada, João Monlevade</b></span>
-    <span class="credenciais__item">Responsável técnica <b>CRO-MG 44763</b></span>
+  <div class="env credenciais__pista">
+    <div class="credenciais__trilho">
+      <span class="credenciais__item"><b>Ortodontia</b> e clínica geral</span>
+      <span class="credenciais__item">Atendemos <b>PASA</b> e <b>IPSM</b></span>
+      <span class="credenciais__item">Rua Negrão de Lima, 51 · <b>Alvorada, João Monlevade</b></span>
+      <span class="credenciais__item">Responsável técnica <b>CRO-MG 44763</b></span>
+    </div>
+    <div class="credenciais__trilho" aria-hidden="true">
+      <span class="credenciais__item"><b>Ortodontia</b> e clínica geral</span>
+      <span class="credenciais__item">Atendemos <b>PASA</b> e <b>IPSM</b></span>
+      <span class="credenciais__item">Rua Negrão de Lima, 51 · <b>Alvorada, João Monlevade</b></span>
+      <span class="credenciais__item">Responsável técnica <b>CRO-MG 44763</b></span>
+    </div>
   </div>
 </section>
 
