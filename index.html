@@ -296,26 +296,25 @@ h3{font-size:1.18rem}
    aqui) mas o selo, a nota e a chamada continuavam com a cor da base. Parecia
    erro de cor; era erro de ordem.
 
-   ============ A FOTO DO CELULAR E OUTRA, E E ELA QUE RESOLVE ============
+   ============ A FOTO DO CELULAR JA FOI TROCADA DUAS VEZES ============
 
-   `fachada-mobile.webp` NAO e a mesma imagem do desktop. E uma foto REAL da
-   fachada, tirada em RETRATO (1086x1448), que o usuario forneceu em
-   19/08/2026 depois de duas tentativas frustradas de topo mobile.
+   PRIMEIRA TROCA (19/08/2026): a composta borrada virou `fachada-mobile.webp`,
+   foto REAL em RETRATO (1086x1448) fornecida pelo usuario. Resolveu a
+   composicao, mas a propria foto tinha um borrao marrom-escuro (reflexo/sombra
+   do vidro) que o usuario circulou num print e pediu pra trocar.
 
-   POR QUE ELA MUDA TUDO. As duas tentativas anteriores falharam pelo mesmo
-   motivo de fundo: a foto da fachada era HORIZONTAL:
-   1ª — palco abrindo com o scroll, sobre uma fachada mobile composta. A base
-        borrada aparecia solta embaixo da foto, sem sentido nenhum.
-   2ª — a mesma composta como fundo, com veu e texto por cima. Sobrava uma
-        faixa clara do letreiro no topo, e do meio pra baixo virava um borrao
-        marrom com a porta de vidro atras das letras. "No mobile nao esta
-        ficando bom" — e estava mesmo.
+   SEGUNDA TROCA (19/08/2026, mesma data): entrou `Gemini_Generated_Image_
+   xi59u9...jpg`, imagem gerada/editada pelo usuario, QUADRADA na origem
+   (2048x2048) — sem o borrao. O arquivo final e um recorte 1350x2048 dessa
+   imagem (`crop=1350:2048:230:0`), centrado no letreiro, depois reduzido pra
+   820px de largura (820x1244). Sem correcao de cor: a imagem ja veio no tom
+   quente da paleta.
 
    Foto horizontal num quadro de retrato nao tem espaco vazio: o assunto ocupa
-   a largura inteira e o texto cai sempre em cima de alguma coisa. **A foto
-   vertical tem os dois lugares que um hero precisa:** o letreiro em cima, com
-   o nome inteiro sem corte, e a calcada embaixo — area limpa e uniforme, que
-   e onde o texto mora. O veu escuro so termina o servico.
+   a largura inteira e o texto cai sempre em cima de alguma coisa — por isso as
+   duas tentativas compostas anteriores nao funcionaram, e por isso o recorte
+   novo preserva o quadro vertical: letreiro em cima, calcada embaixo, area
+   limpa onde o texto mora. O veu escuro so termina o servico.
 
    ⚠️⚠️ A ALTURA DO HERO E O QUE MANTEM O LETREIRO INTEIRO — e a conta esta
    aqui pra nao ter que refazer.
@@ -324,20 +323,21 @@ h3{font-size:1.18rem}
    ampliada pra cobrir a altura, e mais largura ela perde nas laterais. Ou
    seja: hero alto = letreiro cortado. E o contrario da intuicao.
 
-   Medido no arquivo de 820px de largura: o letreiro vai de x=45 (o ponto da
-   esquerda) a x=725 (o ponto da direita) — **680px, 83% da largura**. Como
-   `cover` aqui e governado pela altura, a largura visivel da foto e
-   390 / (altura / 1094). Igualando a 680:
+   Medido no arquivo de 820px de largura (apos o recorte): o letreiro vai de
+   x=42 a x=778 — 736px, 90% da largura, quase centrado (o recorte foi feito
+   de proposito em volta do centro do letreiro). A largura visivel da foto e
+   390 / (altura / 1244):
 
-       altura maxima = 1094 * 390 / 680 = 627px
+       altura maxima sem nenhum corte = 1244 * 390 / 820 = 592px
 
-   Por isso 600px, e nao os 640 da primeira tentativa: em 640 o corte ja comia
-   o ponto da esquerda e a primeira letra de ODONTOLOGIA. **Mexeu na altura ou
-   trocou a foto, refaz essa conta e confere com print a 390px.**
+   O hero fica em `min(72vh,600px)` — 600px passa esse teto por 8px, ou seja
+   um corte de ~6px de cada lado. A margem ate a letra mais proxima (42px) e
+   sete vezes esse corte: folga grande, nao precisa mexer no teto de 600px.
+   **Se um dia trocar a foto de novo:** refazer o recorte centrado no letreiro
+   (nao so redimensionar) e reconferir essa conta com print a 390px.
 
-   O `background-position` horizontal e 27%, e nao `center`: o centro do
-   letreiro fica em x=385, e o centro do quadro em x=410. Centralizar o QUADRO
-   descentraliza o ASSUNTO. */
+   O `background-position` horizontal virou `center` (era 27% na foto antiga,
+   descentrada) porque o recorte novo ja nasce com o letreiro no meio. */
 @media (max-width:700px){
   .hero{
     min-height:min(72vh,600px);
@@ -346,7 +346,7 @@ h3{font-size:1.18rem}
       linear-gradient(180deg,rgba(59,46,38,0) 0%,rgba(59,46,38,.22) 26%,rgba(59,46,38,.62) 52%,rgba(59,46,38,.90) 100%),
       url("assets/img/fachada-mobile.webp"),
       linear-gradient(160deg,#5A4638 0%,#3B2E26 45%,#2A2019 100%);
-    background-position:center,27% top,center;
+    background-position:center,center top,center;
   }
   /* O SELO DE ENDERECO SAI NO CELULAR, por dois motivos que se somam:
      1. ele encostava na linha "ODONTOLOGIA INTEGRADA" do letreiro — texto
@@ -378,10 +378,14 @@ h3{font-size:1.18rem}
 .moldura img{width:100%}
 
 /* ====================== faixa de credenciais ======================
-   NO CELULAR ISSO VIRA LETREIRO — rola sozinho, em loop, sem parar. Pedido do
-   usuario em 19/08/2026, depois de ver os quatro itens empilhados em tres
-   linhas apertadas (print anexado na conversa). No desktop nada mudou: os
-   quatro itens continuam centralizados numa linha so, como sempre foram.
+   VIRA LETREIRO EM QUALQUER TELA — rola sozinho, em loop, sem parar. Nasceu
+   so pro celular em 19/08/2026 (os quatro itens empilhavam em tres linhas
+   apertadas). Nessa mesma data, mais tarde, o usuario pediu que rolasse
+   tambem no desktop, igual ao letreiro da GeP Lavanderia — mesmo com os itens
+   cabendo numa linha so ali, e pediu DOIS itens a mais pra a faixa preencher
+   melhor a tela larga. Por isso a faixa hoje tem seis credenciais, nao
+   quatro, e o layout parado ("display:contents", uma linha centralizada) so
+   volta com `prefers-reduced-motion`.
 
    COMO O LOOP FECHA SEM COSTURA. O truque padrao de letreiro em CSS puro e
    duplicar o conteudo: dois `.credenciais__trilho` iguais, lado a lado dentro
@@ -391,8 +395,8 @@ h3{font-size:1.18rem}
    nessa distancia exata faz o trilho B pousar pixel a pixel onde o trilho A
    comecou — como os dois sao identicos, o olho nao percebe o corte, e a
    animacao pode repetir do zero (`from{translateX(0)}`) sem nenhum salto.
-   Se um dia entrar um QUINTO item, o unico ajuste necessario e nenhum: os
-   dois trilhos continuam identicos entre si, a conta continua batendo.
+   Se entrar um item novo, o unico ajuste necessario e nenhum: os dois
+   trilhos continuam identicos entre si, a conta continua batendo.
 
    POR QUE HA DOIS <div class="credenciais__trilho"> NO HTML, E NAO UM SO
    ANIMADO COM CSS. `translateX(-50%)` precisa que o elemento tenha o DOBRO do
@@ -401,52 +405,39 @@ h3{font-size:1.18rem}
    e o que da a pista o comprimento certo pra conta fechar.
 
    ACESSIBILIDADE. O segundo trilho tem `aria-hidden="true"`: e visual, existe
-   so pro loop funcionar, e um leitor de tela nao deve ler os mesmos quatro
-   itens duas vezes. No desktop ele nem aparece (`display:none`) — so o
-   primeiro conta, e do jeito de sempre. */
-.credenciais{background:var(--marrom);color:#EFE7DB;padding:1.5rem 0}
+   so pro loop funcionar, e um leitor de tela nao deve ler os mesmos itens
+   duas vezes. */
+.credenciais{background:var(--marrom);color:#EFE7DB;padding:1.5rem 0;overflow:hidden}
 .credenciais__pista{
-  display:flex;flex-wrap:wrap;justify-content:center;
-  gap:.6rem clamp(1.2rem,4vw,3rem);text-align:center;
+  display:flex;flex-wrap:nowrap;justify-content:flex-start;text-align:left;
+  width:max-content;margin-inline:0;gap:0;padding-left:1.25rem;
+  animation:letreiro 34s linear infinite;
+  will-change:transform;
 }
-/* No desktop o trilho e transparente pro layout: `display:contents` tira a
-   div do fluxo e deixa os quatro <span> participarem direto do flex-wrap da
-   pista — exatamente a mesma arvore visual de antes do letreiro existir. */
-.credenciais__trilho{display:contents}
-.credenciais__trilho[aria-hidden]{display:none}
-.credenciais__item{font-size:.86rem;letter-spacing:.03em}
+/* Cada trilho e flex de verdade — precisa ocupar espaco proprio pra ficar
+   lado a lado com o outro. `flex:none` impede o flexbox de encolher os
+   trilhos pra caber na tela, que e o oposto do que um letreiro precisa: ele
+   TEM que ser mais largo que a viewport, mesmo no desktop. */
+.credenciais__trilho{
+  display:flex;flex:none;align-items:center;
+  gap:clamp(1.2rem,4vw,3rem);padding-right:clamp(1.2rem,4vw,3rem);
+}
+.credenciais__trilho[aria-hidden]{display:flex}
+.credenciais__item{font-size:.86rem;letter-spacing:.03em;white-space:nowrap}
 .credenciais__item b{color:var(--dourado-claro);font-weight:600}
 
-@media (max-width:700px){
-  .credenciais{overflow:hidden}
-  .credenciais__pista{
-    flex-wrap:nowrap;justify-content:flex-start;text-align:left;
-    width:max-content;margin-inline:0;gap:0;padding-left:1.25rem;
-    animation:letreiro 26s linear infinite;
-    will-change:transform;
-  }
-  /* Cada trilho vira flex de verdade (nao mais `contents`) — precisa ocupar
-     espaco proprio pra ficar lado a lado com o outro. `flex:none` impede o
-     flexbox de encolher os trilhos pra caber na tela, que e o oposto do que
-     um letreiro precisa: ele TEM que ser mais largo que a viewport. */
-  .credenciais__trilho{
-    display:flex;flex:none;align-items:center;
-    gap:clamp(1.2rem,4vw,3rem);padding-right:clamp(1.2rem,4vw,3rem);
-  }
-  .credenciais__trilho[aria-hidden]{display:flex}
-  .credenciais__item{white-space:nowrap}
-}
 @keyframes letreiro{
   from{transform:translateX(0)}
   to{transform:translateX(-50%)}
 }
 /* prefers-reduced-motion desliga o letreiro, mas nao pode so parar o CSS:
-   sem isso os OITO spans (quatro + a copia) ficariam lado a lado, mais largos
+   sem isso os doze spans (seis + a copia) ficariam lado a lado, mais largos
    que a tela, parados — metade do conteudo cortado pra sempre, sem jeito de
-   ler. A saida e reverter pro layout do desktop: os itens voltam a quebrar
-   linha, centralizados, e a copia oculta some (display:none). Movimento
-   desligado, mas nada de conteudo perdido — mesma logica do resto do site. */
-@media (max-width:700px) and (prefers-reduced-motion:reduce){
+   ler. A saida e reverter pro layout parado de sempre: os itens voltam a
+   quebrar linha, centralizados, e a copia oculta some (display:none).
+   Movimento desligado, mas nada de conteudo perdido. */
+@media (prefers-reduced-motion:reduce){
+  .credenciais{overflow:visible}
   .credenciais__pista{
     animation:none;flex-wrap:wrap;width:auto;margin-inline:auto;padding-left:0;
     justify-content:center;text-align:center;
@@ -652,12 +643,21 @@ h3{font-size:1.18rem}
 .insta__item img{width:100%;height:100%;object-fit:cover;display:block}
 .insta__cta{margin-top:1.6rem;position:relative;z-index:1}
 .btn__ico{width:18px;height:18px;fill:currentColor;flex:none}
-/* ⚠️ O leque NAO abre mais com a rolagem — os cinco cards ja nascem na posicao
-   final. A abertura saiu junto com os reveals em 19/08/2026, pelo mesmo motivo
-   (ver o bloco grande la em cima): eram cinco cards invisiveis esperando o
-   dedo chegar, e no celular isso le como pagina que ainda esta carregando.
-   O leque continua sendo leque — a diagonal, a rotacao e a sobreposicao sao
-   posicao em CSS, nao animacao. So a ENTRADA saiu. */
+/* ⚠️ REINTRODUZIDO em 19/08/2026 (segunda vez), a pedido explicito do usuario,
+   depois de ter sido removido nesta mesma data pelo motivo documentado no
+   bloco grande la em cima (reveal dava impressao de site lento no celular).
+   Desta vez ele quis a entrada de volta nos dois tamanhos de tela, sabendo do
+   risco. Se a reclamacao de "parece lento no celular" voltar, o primeiro
+   suspeito e este leque — e a saida ja documentada e so tirar de novo a
+   classe --entrando e o bloco de JS da secao 2. */
+.insta__item--entrando{
+  transform:translate(-50%,-50%) rotate(0deg) scale(.84);opacity:0;
+  transition:transform .9s cubic-bezier(.16,1,.3,1),opacity .6s ease;
+}
+.insta__leque--visivel .insta__item--entrando{
+  transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(var(--r)) scale(1);
+  opacity:1;
+}
 @media (max-width:760px){
   /* --passo e a distancia entre os cards. No celular eles se cobrem quase
      inteiros; um passo um pouco maior deixa ver o conteudo de cada um sem
@@ -886,7 +886,10 @@ h3{font-size:1.18rem}
       <a href="#dentista">A dentista</a>
       <a href="#local">Onde fica</a>
     </nav>
-    <a class="btn topo__cta" href="https://wa.me/5531972159568?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20agendar%20uma%20consulta." target="_blank" rel="noopener">Agendar</a>
+    <a class="btn topo__cta" href="https://wa.me/5531972159568?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20quero%20agendar%20uma%20consulta." target="_blank" rel="noopener">
+      <svg class="btn__ico" aria-hidden="true"><use href="#i-zap"/></svg>
+      Agendar
+    </a>
   </div>
 </header>
 
@@ -946,12 +949,16 @@ h3{font-size:1.18rem}
       <span class="credenciais__item">Atendemos <b>PASA</b> e <b>IPSM</b></span>
       <span class="credenciais__item">Rua Negrão de Lima, 51 · <b>Alvorada, João Monlevade</b></span>
       <span class="credenciais__item">Responsável técnica <b>CRO-MG 44763</b></span>
+      <span class="credenciais__item"><b>4,9</b> no Google em <b>105</b> avaliações</span>
+      <span class="credenciais__item">Estacionamento <b>no local, coberto e gratuito</b></span>
     </div>
     <div class="credenciais__trilho" aria-hidden="true">
       <span class="credenciais__item"><b>Ortodontia</b> e clínica geral</span>
       <span class="credenciais__item">Atendemos <b>PASA</b> e <b>IPSM</b></span>
       <span class="credenciais__item">Rua Negrão de Lima, 51 · <b>Alvorada, João Monlevade</b></span>
       <span class="credenciais__item">Responsável técnica <b>CRO-MG 44763</b></span>
+      <span class="credenciais__item"><b>4,9</b> no Google em <b>105</b> avaliações</span>
+      <span class="credenciais__item">Estacionamento <b>no local, coberto e gratuito</b></span>
     </div>
   </div>
 </section>
@@ -1482,23 +1489,27 @@ h3{font-size:1.18rem}
 </a>
 
 <!-- ====================================================================
-     Animacoes — DUAS, e so duas. Sem biblioteca, sem requisicao de rede, nada
+     Animacoes — TRES. Sem biblioteca, sem requisicao de rede, nada
      bloqueando a renderizacao (o script fica no fim do body).
 
-     ⚠️ ERAM QUATRO. O reveal ao rolar e a abertura do leque do Instagram
-     sairam em 19/08/2026 a pedido do usuario: escondiam conteudo ate a
-     rolagem chegar, e no celular isso le como pagina que ainda esta
-     carregando. Ver o bloco grande no <style>. NAO reintroduzir.
+     Historico: eram quatro, viraram duas em 19/08/2026 (reveal ao rolar e a
+     abertura do leque do Instagram saíram — escondiam conteudo ate a rolagem
+     chegar, e no celular isso lia como pagina que ainda esta carregando).
+     NA MESMA DATA, mais tarde, o usuario pediu a abertura do leque de volta,
+     sabendo do risco. O reveal ao rolar (que animava praticamente a pagina
+     inteira) CONTINUA fora — so o leque do Instagram voltou, que e uma secao
+     so e sempre foi o caso mais leve dos dois.
 
-     O CRITERIO QUE SOBROU, e vale pra qualquer animacao nova aqui:
-     **animacao que esconde conteudo ate a pessoa rolar esta proibida.**
-     As duas que ficaram passam nesse teste — o placar so anima o valor de um
-     numero que ja esta na tela, e o carrossel troca depoimentos que estao
-     todos no HTML.
+     O CRITERIO que vale pra qualquer animacao nova alem dessas tres:
+     **animacao que esconde conteudo ate a pessoa rolar e arriscada** — foi o
+     motivo da queixa de "site lento no celular". O leque voltou como excecao
+     explicita, nao como reversao da regra.
 
-     Regra que vale pras duas: se o JS nao rodar, a pagina continua completa e
-     legivel. O placar ja vem com os numeros finais escritos no HTML, e sem JS
-     o carrossel nao existe — os seis depoimentos ficam empilhados.
+     Regra que vale pras tres: se o JS nao rodar, a pagina continua completa e
+     legivel. O placar ja vem com os numeros finais escritos no HTML, o leque
+     ja nasce com as classes de posicao final aplicadas por CSS (a classe
+     --entrando so entra via JS), e sem JS o carrossel nao existe — os seis
+     depoimentos ficam empilhados.
      ==================================================================== -->
 <script>
 (function(){
@@ -1540,7 +1551,27 @@ h3{font-size:1.18rem}
     }
   }
 
-  /* ---------- 2. carrossel dos depoimentos ---------- */
+  /* ---------- 2. leque do instagram ---------- */
+  /* Os cinco cards saem empilhados no centro e abrem em leque quando a secao
+     entra na tela. Sem JS, sem observador ou com "reduzir movimento" ligado
+     eles ja nascem abertos — a animacao e reforco, nunca requisito. */
+  var leque = document.querySelector("[data-leque]");
+  if (leque && temObs && !semMovimento) {
+    Array.prototype.forEach.call(leque.querySelectorAll(".insta__item"), function(card, i){
+      card.classList.add("insta__item--entrando");
+      card.style.transitionDelay = (i * 110) + "ms";
+    });
+    var obsL = new IntersectionObserver(function(is){
+      is.forEach(function(i){
+        if (!i.isIntersecting) return;
+        leque.classList.add("insta__leque--visivel");
+        obsL.disconnect();
+      });
+    }, { threshold: 0.3 });
+    obsL.observe(leque);
+  }
+
+  /* ---------- 3. carrossel dos depoimentos ---------- */
   var car = document.querySelector("[data-carrossel]");
   if (!car) return;
   var trilho = car.querySelector("[data-trilho]");
